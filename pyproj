@@ -1,0 +1,23 @@
+#!/bin/zsh
+
+PYGITIGNORE='https://raw.githubusercontent.com/github/gitignore/master/Python.gitignore'
+
+usage() {
+  echo 'pyproj <name>'
+  exit 1
+}
+
+die() {
+  echo 'pyproj: could not create directory'
+  exit 1
+}
+
+[[ $# -eq 0 ]] && usage
+mkdir "$1" && cd "$1" || die
+mkdir src test
+touch requirements.txt README.md
+echo "fetching .gitignore..."
+curl -s "$PYGITIGNORE" --output '.gitignore'
+python -m venv "venv"
+cd ..
+
