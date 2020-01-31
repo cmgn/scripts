@@ -1,0 +1,3 @@
+#!/bin/zsh
+
+sed -ue 's/^[[:space:]]*//'

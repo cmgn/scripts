@@ -1,3 +1,3 @@
 #!/bin/zsh
 
-sed 's/^ *\(.*\) *$/\1/g'
+ltrim | rtrim

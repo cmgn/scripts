@@ -1,0 +1,44 @@
+#!/bin/zsh
+
+usage() {
+  echo "indent (-s <positive int> | -t | -n)"
+  exit 1
+}
+
+while getopts 's:tn' o; do
+  case "$o" in
+    t)
+      [[ "$NSPACES" ]] && usage
+      USETABS=1
+      ;;
+    s)
+      [[ "$USETABS" ]] && usage
+      [[ "$OPTARG" -le 0 ]] && usage
+      NSPACES="$OPTARG"
+      ;;
+    n)
+      UNINDENT=1
+      ;;
+    *)
+      usage
+      ;;
+  esac
+done
+
+[[ "$USETABS" || "$NSPACES" ]] || usage
+
+if [[ "$USETABS" ]]; then
+  if [[ "$UNINDENT" ]]; then
+    sed -ue $'s|^\t||g'
+  else
+    sed -ue $'s|^|\t|g'
+  fi
+else
+  indent=$(head -c "$NSPACES" /dev/zero | tr '\0' ' ')
+  if [[ "$UNINDENT" ]]; then
+    sed -ue "s|^$indent||g"
+  else
+    sed -ue "s|^|$indent|g"
+  fi
+fi
+
